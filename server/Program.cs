@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
- .AddRoles<IdentityRole>()
- .AddEntityFrameworkStores<ApplicationDBContext>();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequiredLength = 12;
+});
 
 if (builder.Environment.IsDevelopment())
 {
@@ -25,6 +27,10 @@ builder.Services.AddDbContext<ApplicationDBContext>(opt =>
 {
     opt.UseNpgsql(connString);
 });
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -42,7 +48,7 @@ using (var scope = app.Services.CreateScope())
 }
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapIdentityApi<IdentityUser>();
+//app.MapIdentityApi<IdentityUser>();
 app.MapControllers();
 
 app.Run();

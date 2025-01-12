@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>ff105010-e744-47a9-a454-09972f1c68f9</UserSecretsId>
   </PropertyGroup>
@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
     <Folder Include="Services\" />
     <Folder Include="Utils\" />
   </ItemGroup>

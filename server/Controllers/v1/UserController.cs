@@ -4,7 +4,7 @@ using server.DTO.User;
 
 namespace server.Controllers
 {
-    [Route("api/v{version:apiVersion}/users")]
+    [Route("api/v{version:apiVersion}/users/")]
     [ApiVersion("1.0")]
     [ApiController]
     public class UserController : ControllerBase

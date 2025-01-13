@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
@@ -27,6 +28,17 @@ var connString = builder.Configuration.GetConnectionString("DefaultPostgreSQLCon
 builder.Services.AddDbContext<ApplicationDBContext>(opt =>
 {
     opt.UseNpgsql(connString);
+});
+
+builder.Services.AddApiVersioning(opt =>
+{
+    opt.AssumeDefaultVersionWhenUnspecified = true;
+    opt.DefaultApiVersion = new ApiVersion(1, 0);
+    opt.ReportApiVersions = true;
+}).AddMvc().AddApiExplorer(opt =>
+{
+    opt.GroupNameFormat = "'v'VVV";
+    opt.SubstituteApiVersionInUrl = true;
 });
 
 

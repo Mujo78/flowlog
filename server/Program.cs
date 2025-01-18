@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Models;
-using server.Utils.Validations;
+using server.Services;
+using server.Services.IService;
+using server.Utils.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,11 @@ builder.Services.AddDbContext<ApplicationDBContext>(opt =>
 {
     opt.UseNpgsql(connString);
 });
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddApiVersioning(opt =>
 {

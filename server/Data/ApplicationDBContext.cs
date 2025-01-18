@@ -8,6 +8,8 @@ namespace server.Data;
 public class ApplicationDBContext(DbContextOptions options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options)
 {
 
+    public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

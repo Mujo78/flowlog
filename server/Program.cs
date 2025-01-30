@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Models;
+using server.Repository;
+using server.Repository.IRepository;
 using server.Services;
 using server.Services.IService;
 using server.Utils.Email;
@@ -33,6 +35,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(opt =>
 });
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddTransient<IEmailService, EmailService>();

@@ -45,9 +45,31 @@ public class UserService(IEmailService emailService, IUserRepository repository)
         }
     }
 
+    public async Task VerifyEmail(string token)
+    {
+        string hashedToken = GenerateEmailVerificationTokenAsync(token);
+        var storedToken = await userRepository.GetEmailToken(hashedToken) ?? throw new Exception("Invalid token provided. Token not found or expired.");
+
+        if (!storedToken.Verified && IsEmailTokenValid(storedToken))
+        {
+            storedToken.Verified = true;
+            await userRepository.VerifyEmailToken(storedToken);
+        }
+        else
+        {
+            throw new Exception("Token expired or already verified.");
+        }
+
+
+    }
     public string GenerateEmailVerificationTokenAsync(string generatedToken)
     {
         byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(generatedToken));
         return Convert.ToBase64String(bytes);
+    }
+
+    public bool IsEmailTokenValid(EmailVerificationToken token)
+    {
+        return token.ExpirationTime > DateTime.UtcNow;
     }
 }

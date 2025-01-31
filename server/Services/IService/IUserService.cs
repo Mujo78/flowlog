@@ -5,4 +5,5 @@ namespace server.Services.IService;
 public interface IUserService
 {
     Task UserSignup(SignUpDTO signUpDTO);
+    Task VerifyEmail(string token);
 }

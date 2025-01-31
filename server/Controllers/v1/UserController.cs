@@ -22,5 +22,15 @@ namespace server.Controllers
             await _userService.UserSignup(signUpDTO);
             return Ok("Success");
         }
+
+        [HttpPost("verify-email/{token}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public async Task<ActionResult> VerifyEmail([FromRoute] string token)
+        {
+            if (token == null) return BadRequest("Please provide valid data for email verification.");
+
+            await _userService.VerifyEmail(token);
+            return Ok("Success");
+        }
     }
 }

@@ -12,7 +12,7 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250130155923_EmailVerificationTable")]
+    [Migration("20250131123734_EmailVerificationTable")]
     partial class EmailVerificationTable
     {
         /// <inheritdoc />
@@ -232,6 +232,9 @@ namespace server.Migrations
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 

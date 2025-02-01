@@ -32,5 +32,16 @@ namespace server.Controllers
             await _userService.VerifyEmail(token);
             return Ok("Success");
         }
+
+        [HttpPost("registration/{email}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public async Task<ActionResult> Registration([FromBody] RegistrationDTO registrationDTO, [FromRoute] string email)
+        {
+            if (registrationDTO == null) return BadRequest("Please provide valid data for registration.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            await _userService.UserRegistration(registrationDTO, email);
+            return Ok("Success");
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using BCrypt.Net;
 using server.DTO.User;
 using server.Models;
 using server.Repository.IRepository;
@@ -59,9 +60,13 @@ public class UserService(IEmailService emailService, IUserRepository repository)
         {
             throw new Exception("Token expired or already verified.");
         }
+    }
 
+    public async Task UserRegistration(RegistrationDTO registrationDTO, string email)
+    {
 
     }
+
     public string GenerateEmailVerificationTokenAsync(string generatedToken)
     {
         byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(generatedToken));

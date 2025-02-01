@@ -19,5 +19,21 @@ public class ApplicationDBContext(DbContextOptions options) : IdentityDbContext<
                                            .Ignore(c => c.TwoFactorEnabled);
 
         modelBuilder.Entity<ApplicationUser>().ToTable("Users");
+
+        modelBuilder.Entity<ApplicationRole>().ToTable("Roles");
+        modelBuilder.Entity<ApplicationRole>().HasData(
+            new ApplicationRole()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Admin",
+                NormalizedName = "ADMIN"
+            },
+            new ApplicationRole()
+            {
+                Id = Guid.NewGuid(),
+                Name = "User",
+                NormalizedName = "USER"
+            }
+        );
     }
 }

@@ -33,11 +33,11 @@ namespace server.Controllers
             return Ok("Success");
         }
 
-        [HttpPost("registration/{email}")]
+        [HttpPost("registration")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public async Task<ActionResult> Registration([FromBody] RegistrationDTO registrationDTO, [FromRoute] string email)
+        public async Task<ActionResult> Registration([FromBody] RegistrationDTO registrationDTO, [FromQuery(Name = "email")] string email)
         {
-            if (registrationDTO == null) return BadRequest("Please provide valid data for registration.");
+            if (registrationDTO == null || string.IsNullOrEmpty(email)) return BadRequest("Please provide valid data for registration.");
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await _userService.UserRegistration(registrationDTO, email);

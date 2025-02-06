@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
+using server.Data;
 using server.DTO.User;
 using server.Models;
 using server.Repository.IRepository;
@@ -8,10 +10,11 @@ using server.Services.IService;
 
 namespace server.Services;
 
-public class UserService(IEmailService emailService, IUserRepository repository) : IUserService
+public class UserService(IEmailService emailService, IUserRepository repository, ApplicationDBContext db) : IUserService
 {
     private readonly IEmailService emailService = emailService;
     private readonly IUserRepository userRepository = repository;
+    private readonly ApplicationDBContext db = db;
 
     public async Task UserSignup(SignUpDTO signUpDTO)
     {
@@ -64,7 +67,38 @@ public class UserService(IEmailService emailService, IUserRepository repository)
 
     public async Task UserRegistration(RegistrationDTO registrationDTO, string email)
     {
+        if (userRepository.EmailAlreadyUsed(email))
+        {
+            throw new Exception("Email already used.");
+        }
 
+        var emailToken = await userRepository.GetEmailTokenByEmail(email) ?? throw new Exception("Email not found.");
+        var roleId = await userRepository.GetRoleByName("User") ?? throw new Exception("Role not found.");
+
+        var user = new ApplicationUser
+        {
+            Email = email,
+            NormalizedEmail = email.ToLower(),
+            UserName = registrationDTO.Username,
+            NormalizedUserName = registrationDTO.Username.ToLower(),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registrationDTO.Password, 12),
+            RoleId = roleId,
+            EmailConfirmed = true
+        };
+
+        var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            await userRepository.DeleteUserEmailToken(emailToken);
+            await userRepository.CreateAsync(user);
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            throw new Exception(ex.Message);
+        }
     }
 
     public string GenerateEmailVerificationTokenAsync(string generatedToken)

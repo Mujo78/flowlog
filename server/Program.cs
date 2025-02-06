@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using server;
 using server.Data;
 using server.Models;
 using server.Repository;
@@ -39,6 +40,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddTransient<IEmailService, EmailService>();
+
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddApiVersioning(opt =>
 {

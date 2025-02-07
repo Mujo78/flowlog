@@ -29,6 +29,44 @@ public class EmailService(IOptions<MailSettings> mailSettings, IConfiguration co
         await client.DisconnectAsync(true);
     }
 
+    public async Task SendForgotPasswordEmailAsync(string email, string username, string token)
+    {
+        try
+        {
+            string verificationLink = configuration["URL"] + $"forgot-password/{token}";
+
+            MailData data = new()
+            {
+                EmailToId = email,
+                EmailToName = username,
+                EmailSubject = "Password Reset Request",
+                EmailBody = $"Hi {username},\nForgot your password?\n" +
+                $"We received a request to reset the password for your account\n" +
+                $"To reset your password, click on the button below:\n" +
+                $"{verificationLink}",
+            };
+
+            string filePath = GetTemplatePath("ForgotPassword.html");
+            string emailTemplateText = File.ReadAllText(filePath);
+
+            emailTemplateText = emailTemplateText.Replace("{{Name}}", data.EmailToName);
+            emailTemplateText = emailTemplateText.Replace("{{Link}}", verificationLink);
+
+            BodyBuilder bodyBuilder = new()
+            {
+                HtmlBody = emailTemplateText,
+                TextBody = data.EmailBody
+            };
+
+            await SendEmailAsync(data, bodyBuilder);
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
     public async Task SendVerificationEmailAsync(string email, string token)
     {
         try

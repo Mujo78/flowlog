@@ -7,4 +7,5 @@ public interface IUserService
     Task UserSignup(SignUpDTO signUpDTO);
     Task VerifyEmail(string token);
     Task UserRegistration(RegistrationDTO registrationDTO, string email);
+    Task ForgotPassword(ForgotPasswordDTO forgotPasswordDTO);
 }

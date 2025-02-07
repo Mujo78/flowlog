@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.DTO.User;
@@ -10,9 +11,10 @@ using server.Services.IService;
 
 namespace server.Services;
 
-public class UserService(IEmailService emailService, IUserRepository repository, ApplicationDBContext db) : IUserService
+public class UserService(IEmailService emailService, IUserRepository repository, UserManager<ApplicationUser> userManager, ApplicationDBContext db) : IUserService
 {
     private readonly IEmailService emailService = emailService;
+    private readonly UserManager<ApplicationUser> userManager = userManager;
     private readonly IUserRepository userRepository = repository;
     private readonly ApplicationDBContext db = db;
 
@@ -78,10 +80,7 @@ public class UserService(IEmailService emailService, IUserRepository repository,
         var user = new ApplicationUser
         {
             Email = email,
-            NormalizedEmail = email.ToLower(),
             UserName = registrationDTO.Username,
-            NormalizedUserName = registrationDTO.Username.ToLower(),
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registrationDTO.Password, 12),
             RoleId = roleId,
             EmailConfirmed = true
         };
@@ -91,7 +90,7 @@ public class UserService(IEmailService emailService, IUserRepository repository,
         try
         {
             await userRepository.DeleteUserEmailToken(emailToken);
-            await userRepository.CreateAsync(user);
+            await userManager.CreateAsync(user, registrationDTO.Password);
             await transaction.CommitAsync();
         }
         catch (Exception ex)
@@ -110,5 +109,22 @@ public class UserService(IEmailService emailService, IUserRepository repository,
     public bool IsEmailTokenValid(EmailVerificationToken token)
     {
         return token.ExpirationTime > DateTime.UtcNow;
+    }
+
+    public async Task ForgotPassword(ForgotPasswordDTO forgotPasswordDTO)
+    {
+        var user = await userManager.FindByEmailAsync(forgotPasswordDTO.Email) ?? throw new Exception("User not found.");
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+        try
+        {
+            await emailService.SendForgotPasswordEmailAsync(forgotPasswordDTO.Email, user.UserName!, token);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+
     }
 }

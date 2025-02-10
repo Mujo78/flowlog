@@ -58,5 +58,17 @@ namespace server.Controllers
             await _userService.ForgotPassword(forgotPasswordDTO);
             return Ok("Success");
         }
+
+        [HttpPost("reset-password")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            if (resetPasswordDTO == null || string.IsNullOrEmpty(resetPasswordDTO.Token)) return BadRequest("Please provide valid data for reset password request.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            await _userService.ResetPassword(resetPasswordDTO);
+            return Ok("Success");
+        }
     }
 }

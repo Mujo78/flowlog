@@ -33,7 +33,7 @@ public class EmailService(IOptions<MailSettings> mailSettings, IConfiguration co
     {
         try
         {
-            string verificationLink = configuration["URL"] + $"forgot-password/{token}";
+            string verificationLink = configuration["URL"] + $"forgot-password?token={token}&email={email}";
 
             MailData data = new()
             {

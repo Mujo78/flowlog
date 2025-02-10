@@ -127,4 +127,12 @@ public class UserService(IEmailService emailService, IUserRepository repository,
         }
 
     }
+
+    public async Task ResetPassword(ResetPasswordDTO resetPasswordDTO)
+    {
+        var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email) ?? throw new Exception("User not found.");
+
+        await userManager.VerifyUserTokenAsync(user, userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDTO.Token);
+        throw new NotImplementedException();
+    }
 }

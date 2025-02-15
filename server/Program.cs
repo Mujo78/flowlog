@@ -38,6 +38,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(opt =>
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 

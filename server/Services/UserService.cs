@@ -132,7 +132,19 @@ public class UserService(IEmailService emailService, IUserRepository repository,
     {
         var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email) ?? throw new Exception("User not found.");
 
-        await userManager.VerifyUserTokenAsync(user, userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDTO.Token);
-        throw new NotImplementedException();
+        if (!await userManager.VerifyUserTokenAsync(user, userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDTO.Token))
+        {
+            throw new Exception("Invalid token provided. Token is invalid or expired.");
+        }
+
+        try
+        {
+            await userManager.ResetPasswordAsync(user, resetPasswordDTO.Token, resetPasswordDTO.Password);
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
     }
 }

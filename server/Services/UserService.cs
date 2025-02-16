@@ -91,6 +91,7 @@ public class UserService(IEmailService emailService, IUserRepository repository,
         {
             await userRepository.DeleteUserEmailToken(emailToken);
             await userManager.CreateAsync(user, registrationDTO.Password);
+            await emailService.SendWelcomeEmailAsync(email, user.UserName);
             await transaction.CommitAsync();
         }
         catch (Exception ex)

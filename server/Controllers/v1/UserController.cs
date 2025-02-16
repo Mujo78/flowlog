@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using server.DTO.User;
 using server.Services.IService;
 
-namespace server.Controllers
+namespace server.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/users/")]
     [ApiVersion("1.0")]

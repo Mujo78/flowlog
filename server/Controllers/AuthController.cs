@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.DTO.Auth;
 using server.Services.IService;
@@ -13,7 +12,7 @@ namespace server.Controllers
     {
         private readonly IAuthService _authService = authService;
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Login([FromBody] LoginDTO loginDTO)

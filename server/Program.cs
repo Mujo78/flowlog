@@ -55,10 +55,10 @@ builder.Services.AddApiVersioning(opt =>
     opt.SubstituteApiVersionInUrl = true;
 });
 
-
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddTokenProvider<ResetPasswordTokenProviderCustom<ApplicationUser>>(TokenOptions.DefaultProvider);
 
 var app = builder.Build();
 

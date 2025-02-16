@@ -84,8 +84,42 @@ public class EmailService(IOptions<MailSettings> mailSettings, IConfiguration co
             string filePath = GetTemplatePath("EmailVerification.html");
             string emailTemplateText = File.ReadAllText(filePath);
 
-            emailTemplateText = emailTemplateText.Replace("{{name}}", data.EmailToName);
             emailTemplateText = emailTemplateText.Replace("{{link}}", verificationLink);
+
+            BodyBuilder bodyBuilder = new()
+            {
+                HtmlBody = emailTemplateText,
+                TextBody = data.EmailBody
+            };
+
+            await SendEmailAsync(data, bodyBuilder);
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public async Task SendWelcomeEmailAsync(string email, string username)
+    {
+        try
+        {
+            string appLink = configuration["URL"]!;
+
+            MailData data = new()
+            {
+                EmailToId = email,
+                EmailToName = username,
+                EmailSubject = "Welcome!",
+                EmailBody = $"<h1>Welcome to Flowlog</h1>"
+            };
+
+            string filePath = GetTemplatePath("Welcome.html");
+            string emailTemplateText = File.ReadAllText(filePath);
+
+            emailTemplateText = emailTemplateText.Replace("{{username}}", data.EmailToName);
+            emailTemplateText = emailTemplateText.Replace("{{app_link}}", appLink);
 
             BodyBuilder bodyBuilder = new()
             {

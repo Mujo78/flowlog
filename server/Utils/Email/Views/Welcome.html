@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Flowlog</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .header {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+      .content {
+        font-size: 16px;
+        color: #555;
+        margin: 20px 0;
+      }
+      .button {
+        display: inline-block;
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 12px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; box-sizing: border-box">
+    <div class="container">
+      <div class="header">Welcome to Flowlog 🚀</div>
+      <div class="content">
+        Hi {{username}},<br /><br />
+        Welcome to <strong>Flowlog</strong> – a community where your thoughts,
+        stories, and discussions shape the digital space! <br /><br />
+        Whether you want to
+        <strong
+          >share insightful articles, start engaging discussions, or explore
+          diverse topics</strong
+        >, you’re in the right place.
+        <p>Get started now:</p>
+        <ul style="text-align: left; display: inline-block">
+          <li>Create your first post and share your ideas</li>
+          <li>Join discussions and connect with like-minded people</li>
+          <li>Follow topics that interest you the most</li>
+        </ul>
+        <br />
+        <a href="{{app_link}}" class="button">Start Exploring</a>
+      </div>
+      <div class="footer">
+        If you have any questions, feel free to reach out.<br />
+        Happy exploring!<br />
+        <strong>The Flowlog Team</strong>
+      </div>
+    </div>
+  </body>
+</html>
